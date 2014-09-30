@@ -6,12 +6,11 @@ Project 1 Matrix Multiple for 7212, Minsheng
 #include <pthread.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
-#include <math.h>
 
 int64_t row,rc,col;
 int64_t **A, **B, **C;
 FILE *afile, *bfile, *cfile;
+int num_thrd;
 
 struct pos
 {
@@ -19,15 +18,23 @@ struct pos
 	int64_t j;
 };
 
-void* calculateIJ(void *param)
+void* multiply(void* portion)
 {
-	struct pos *p = (struct pos*)(param);
-	int64_t ii;
-	for(ii=0;ii<rc;ii++)
-		C[p->i][p->j] += A[p->i][ii]*B[ii][p->j];
+  int s = (int)portion;   // retrive the portion info
+  int from = (s * row)/num_thrd; 
+  int to = ((s+1) * col)/num_thrd;
+  int i,j,k;
+ 
+  for (i = from; i < to; i++)
+  {  
+    for (j = 0; j < row; j++)
+    {
+      for ( k = 0; k < rc; k++)
+ 		C[i][j] += A[i][k]*B[k][j];
+    }
+  }
 
-	pthread_exit(0);
-
+  return 0;
 }
 
 void printout()
@@ -47,13 +54,15 @@ void printout()
 
 int main(int argc,char *argv[])
 {
-	if(argc != 3)
+	if(argc != 5)
 	{
-		fprintf(stderr,"usage: a.out intputFile(A) intputFile(B)");
+		fprintf(stderr,"usage: a.out N(threads) intputFile(A) intputFile(B) outputFile(C)");
+		return -1;
 	}
 
-	afile = fopen(argv[1],"r");
-	bfile = fopen(argv[2],"r");
+	afile = fopen(argv[2],"r");
+	bfile = fopen(argv[3],"r");
+	cfile = fopen(argv[4],"w");
 
 	if(afile == NULL)
 	{
@@ -67,38 +76,29 @@ int main(int argc,char *argv[])
 		return -1;
 	}
 
+	if(cfile == NULL)
+	{
+		fprintf(stderr, "Can't open output file for matrix C!\n");
+	}
+
 	//read row, rc and col;
 	int64_t a1,a2,a3;
 	int64_t b1,b2,b3;
-	sscanf(argv[1],"input%lld_%lld_%lld",&a1,&a2,&a3);
-	sscanf(argv[2],"input%lld_%lld_%lld",&b1,&b2,&b3);
+	sscanf(argv[2],"input%lld_%lld_%lld",&a1,&a2,&a3);
+	sscanf(argv[3],"input%lld_%lld_%lld",&b1,&b2,&b3);
 
-	pthread_t tid;
-	pthread_attr_t attr;
+	num_thrd = atoi(argv[1]);
 
-	pthread_attr_init(&attr);
+	pthread_t tids[num_thrd]; // create N threads to calculate the matrix muliplication.
+
 	int64_t i, j, inc, temp;
 	char c;
 	
 	row = a2;
 	rc = a3;
 	col = b3;
-	int64_t lenRow = (int64_t)floor(log10((float)row)) + 1;
-	int64_t lenCol = (int64_t)floor(log10((float)col)) + 1;
-	char output[20+lenCol+lenRow];
 
-	sprintf(output,"result_%lld_%lld.mat",row,col);
-
-	//needs to finished
-	cfile = fopen(output,"wb");
-
-	if(cfile == NULL)
-	{
-		fprintf(stderr, "Can't open output file for matrix C!\n");
-		return -1;
-	}
-
-	//initialize A,B,C
+	// initialize matrix A.
 	A=(int64_t **)malloc(row*sizeof(int64_t *));
 
 	for(i=0;i<row;i++)
@@ -127,6 +127,7 @@ int main(int argc,char *argv[])
 		return -1;
 	}
 
+	// initialize matrix B.
 	B=(int64_t **)malloc(rc*sizeof(int64_t *));
 
 	for(i=0;i<rc;i++)
@@ -155,6 +156,7 @@ int main(int argc,char *argv[])
 		return -1;
 	}
 
+	// initialize matrix C.
 	C=(int64_t **)malloc(row*sizeof(int64_t *));
 
 	for(i=0;i<row;i++)
@@ -164,17 +166,23 @@ int main(int argc,char *argv[])
 		for(j=0;j<col;j++)
 			C[i][j] = 0;
 
-	//calculate C for each element in C generate a thread to calculate the corresponding result
-	for(i=0;i<row;i++)
-		for(j=0;j<col;j++)
-		{
-			struct pos *p = (struct pos*) malloc(sizeof(struct pos));
-			p->i=i;
-			p->j=j;
-			pthread_attr_init(&attr);
-			pthread_create(&tid,&attr,calculateIJ, (void*)p);
-			pthread_join(tid,NULL);
-		}
+	for (i = 1; i < num_thrd; i++)
+	{
+	    // creates each thread working on its own portion of i
+	    if (pthread_create (&tids[i], NULL, multiply, (void*)i) != 0 )
+	    {
+	      perror("Can't create thread");
+	      free(tids);
+	      exit(-1);
+	    }
+	}
+
+	// main thread works on portion 0
+	multiply(0);
+	 
+	// main thead waiting for other thread to complete
+	for (i = 1; i < num_thrd; i++)
+	    pthread_join (tids[i], NULL);
 
 	printout();
 
