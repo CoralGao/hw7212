@@ -10,20 +10,14 @@ Project 1 Matrix Multiple for 7212, Minsheng
 int64_t row,rc,col;
 int64_t **A, **B, **C;
 FILE *afile, *bfile, *cfile;
-int num_thrd;
-
-struct pos
-{
-	int64_t i;
-	int64_t j;
-};
+int64_t num_thrd;
 
 void* multiply(void* portion)
 {
-  int s = (int)portion;   // retrive the portion info
-  int from = (s * row)/num_thrd; 
-  int to = ((s+1) * col)/num_thrd;
-  int i,j,k;
+  int64_t s = (int64_t)portion;   // retrive the portion info
+  int64_t from = (s * row)/num_thrd; 
+  int64_t to = ((s+1) * col)/num_thrd;
+  int64_t i,j,k;
  
   for (i = from; i < to; i++)
   {  
