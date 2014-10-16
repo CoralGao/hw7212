@@ -16,12 +16,12 @@ void* multiply(void* portion)
 {
   int64_t s = (int64_t)portion;   // retrive the portion info
   int64_t from = (s * row)/num_thrd; 
-  int64_t to = ((s+1) * col)/num_thrd;
+  int64_t to = ((s+1) * row)/num_thrd;
   int64_t i,j,k;
  
   for (i = from; i < to; i++)
   {  
-    for (j = 0; j < row; j++)
+    for (j = 0; j < col; j++)
     {
       for ( k = 0; k < rc; k++)
  		C[i][j] += A[i][k]*B[k][j];
