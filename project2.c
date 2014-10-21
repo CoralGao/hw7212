@@ -1,3 +1,7 @@
+/*
+Data: Oct.15.2014
+Project 2 Consumer-Producer problem for 7212, Minsheng
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -6,17 +10,17 @@
 #include <time.h>
 
 #define BUFFER_SIZE 5 					// buffer size 
-#define FACTOR 0.0000001
+#define FACTOR 0.000000001 		// one-billionth
 #define TRUE 1
 
 int buffer[BUFFER_SIZE];
 sem_t full;
 sem_t empty;
 pthread_mutex_t mutex;
+int count, in, out;
 
 int insertItem(int item);		// inserts item into the buffer
 int removeItem(int *item);		// removes an item from the buffer, places it in *item
-
 void *producer(void *prodId);
 void *consumer(void *consId);
 
@@ -52,6 +56,7 @@ int main(int argc, char *argv[]) {
 	sleepTime = atoi(argv[1]);
 	numProducers = atoi(argv[2]);
 	numConsumers = atoi(argv[3]);
+	count = 0; in = 0; out = 0;
 	
 	// initialize the buffer 
 	for(i=0;i<BUFFER_SIZE;i++)
@@ -60,9 +65,8 @@ int main(int argc, char *argv[]) {
 	}
 	
 	sem_init(&full, 0, 0);
-	sem_init(&empty, 0, 5);
-	
-	printf("initialize empty is: %d\n",empty);
+	sem_init(&empty, 0, 5);	
+	pthread_mutex_init(&mutex, NULL);
 
 	/* producer and consumer threads */
 	pthread_t producer_threads[numProducers], consumer_threads[numConsumers];
@@ -94,33 +98,30 @@ int main(int argc, char *argv[]) {
 
 int insertItem(int item)
 {
-	printf("comes to insert an item\n");
 	/* insert item into buffer 
 	return 0 if successful, otherwise 
 	return -1 indicating an error condition */	
 	
-	// if buffer is full, return -1
-	printf("empty is %d\n",empty);
-	if(empty>0) {
-		buffer[BUFFER_SIZE-empty] = item;
+	if(count < BUFFER_SIZE) {
+		buffer[in] = item;
+		in = (in + 1) % BUFFER_SIZE;
+		count++;
 		return 0;
 	}
-
-	printf("insert not successful\n");
-
+	
 	return -1;
 }
 
 int removeItem(int *item)
 {
-	printf("comes to remove an item\n");
-
 	/* remove an object from buffer placing it in item
 	return 0 if successful
 	return -1 indicating an error condition */
 	
-	if(full>0) {
-		*item = buffer[full-1]; 
+	if(count > 0) {
+		*item = buffer[out];
+		out = (out + 1) % BUFFER_SIZE;
+		count--;
 		return 0;
 	}
 	
@@ -147,7 +148,7 @@ void *producer(void *prodId)
 		pthread_mutex_lock(&mutex);
 		
 		if(!insertItem(item))
-			printf("producer %lldd inserted %d into buffer\n", id, item);
+			printf("producer %lld inserted %d into buffer\n", id, item);
 		
 		/* release the mutex lock */
 		pthread_mutex_unlock(&mutex);
@@ -173,7 +174,7 @@ void *consumer(void *consId)
 		pthread_mutex_lock(&mutex);
 		
 		if(!removeItem(&item))
-			printf("consumer %lldd removed %d from buffer\n", id, item);
+			printf("consumer %lld removed %d from buffer\n", id, item);
 
 		/* release the mutex lock */
 		pthread_mutex_unlock(&mutex);
