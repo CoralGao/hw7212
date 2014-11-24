@@ -1,0 +1,9 @@
+This program runs a simulation for the LRU and FIFO replacement policy. 
+
+To Compile the program: 
+make
+To clean the object/binary files:
+make clean
+
+To run the program, the number of reference string should be specified and given from the terminal
+./project3 #ofReferenceString #ofFrames

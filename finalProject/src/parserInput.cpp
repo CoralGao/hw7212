@@ -2,6 +2,7 @@
 Author: Minsheng Zhang
 		Shanshan Gao
 */
+		
 #include "parserInput.hpp"
 #include <fstream>
 #include <iostream>
@@ -23,11 +24,9 @@ inputParser::startParsers(string fileName)
 	int width = 0;
 	while (getline(inputFile,tmp))
 	{
-		if(tmp!=""){
-			inputVec.push_back(tmp);
-			width = std::max(width,length(tmp));
-			height++;
-		}
+		inputVec.push_back(tmp);
+		width = std::max(width,length(tmp));
+		height++;
 	}
 
 	if(width == 0)
@@ -175,22 +174,3 @@ inputParser::length(string s)
 
 	return n;
 }
-
-/*int main(int argc, char* argv[])
-{
-	inputParser ip; 
-	ip.startParsers(argv[1]);
-
-	vector<string> board = ip.getBoard();
-	for(int i=0;i<board.size();i++)
-	{
-		cout << board[i] << endl;
-	}
-
-	vector<vector<string> > pieces = ip.getPieces();
-	for(int i=0;i<pieces.size();i++)
-	{
-		for(int j=0;j<pieces[i].size();j++)
-			cout << pieces[i][j] << endl;
-	}
-}*/
