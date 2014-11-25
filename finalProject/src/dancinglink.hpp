@@ -37,10 +37,14 @@ class DL
 		void insert(int r, int c);
 		void cover(int c);
 		void uncover(int c);
-		int search(/* int k=0 */);
+		bool search(int k, int max=-1);
+
+	private:
+		int getData(int a[], int k);
 
 	private:
 		ColunmHeader* root;
 		ColunmHeader* ColIndex;
 		Node* RowIndex;
+		int totalSolutionsFound;
 };

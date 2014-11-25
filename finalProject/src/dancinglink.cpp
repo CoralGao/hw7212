@@ -1,10 +1,18 @@
 #include "dancinglink.hpp"
+#include "def.h"
 #include <vector>
+#include <map>
 
 using namespace std;
 
+extern int dataset[10000];
+extern int metadata[MAX_PROC_NUMBER * 2];
+extern int totalsubset;
+extern int totalSolutions;
+
 DL::DL(vector<vector<int> > matrix)
 {
+	int totalSolutionsFound = 0;
 	int rows = matrix.size();
 	int cols = matrix[0].size();
 
@@ -131,10 +139,34 @@ void DL::uncover(int c)
 	col->left->right = col;
 }
 
-int DL::search()
+bool DL::search(int k, int max)
 {	
+	if(max != -1 && k > max)
+	{
+		if(totalsubset == 0) metadata[0] = 0;
+		else metadata[totalsubset*2] = metadata[totalsubset*2-2]+metadata[totalsubset*2-1];
+
+		metadata[totalsubset*2+1] = this->getData(dataset,metadata[totalsubset*2]);
+
+		// cout the remain matrix<sub problem>
+		/*int start = metadata[totalsubset*2];
+		for(int i=0;i<metadata[totalsubset*2+1];i++)
+		//{
+			cout << dataset[start+i];
+		//}
+
+		cout << endl;*/
+
+		totalsubset++;
+		return true;
+	}
+
 	if(root->right == root)
-		return 1;
+	{
+		totalSolutionsFound++;
+		totalSolutions++;
+		return true;
+	}
 
 	ColunmHeader* choose = (ColunmHeader*)root->right, *temp=choose;
 	while(temp != root)
@@ -144,10 +176,9 @@ int DL::search()
 		temp = (ColunmHeader*)temp->right;
 	}
 
-	if(choose->size <= 0)
-		return 0;
+	if(choose->size == 0)
+		return false;
 
-	int ans = 0;
 	cover(choose->col);
 
 	Node* tempC = choose->down;
@@ -161,7 +192,7 @@ int DL::search()
 			tempR = tempR->right;
 		}
 
-		ans += search();
+		search(k+1,max);
 
 		tempR = nodeR->left;
 		while(tempR != nodeR)
@@ -173,5 +204,59 @@ int DL::search()
 	}
 
 	uncover(choose->col);
-	return ans;
+	return true;
+}
+
+int 
+DL::getData(int a[], int k)
+{
+	int l = 0,
+		col = 0,
+		c = 0;
+	map <int,int> lines;
+
+	ColunmHeader* choose = (ColunmHeader*)root->right, *temp=choose;
+	while(temp!=root)
+	{
+		col++;
+		Node* tempC = temp->down;
+		while(tempC != temp)
+		{
+			lines[tempC->row] = 1;
+			tempC = tempC->down;
+		}
+
+		temp = (ColunmHeader*)temp->right;
+	}
+
+	for(map<int,int>::iterator it = lines.begin(); it!=lines.end(); ++it)
+	{
+		it->second = l;
+		l++;
+	}
+
+	a[k] = lines.size();
+	a[k+1] = col;
+	
+	//initilize
+	for(int i=0;i<lines.size()*col;i++)
+	{
+		a[k+2+i] = 0;
+	}
+
+	temp = choose;
+	while(temp!=root)
+	{
+		Node* tempC = temp->down;
+		while(tempC!=temp)
+		{
+			//cout << tempC->row << " " << tempC->col << endl;
+			a[k+2+lines[tempC->row]+c*lines.size()] = 1;
+			tempC = tempC->down;
+		}
+		c++;
+		temp = (ColunmHeader*)temp->right;
+	}
+
+	return lines.size()*col+2;	
 }

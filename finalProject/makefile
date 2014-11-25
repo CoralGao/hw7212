@@ -1,5 +1,5 @@
 CC=g++
-CXXFLAGS=-g
+CXXFLAGS=-g -std=c++11
 LDFLAGS=
 #SOURCES=parserInput.hpp parserInput.cpp tileSolver.hpp tileSolver.cpp
 EXECUTABLE=tileSolver
