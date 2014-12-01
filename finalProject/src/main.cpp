@@ -15,7 +15,6 @@ Author: Minsheng Zhang
 #include <cmath>
 #include <cstdlib>
 #include <stack>
-//#define MAX_PROC_NUMBER 100
 
 using namespace std;
 int dataset[10000];
@@ -112,287 +111,6 @@ scatterMetaData(int *data,
 int main(int argc, char* argv[])
 {
 	int initExploreLevel = 0;
-	/*inputParser ip; 
-	ip.startParsers(argv[1]);
-
-	vector<string> board = ip.getBoard();*/
-
-	// print ou the board
-	/*for(int i=0;i<board.size();i++)
-	{
-		cout << board[i] << endl;
-	}
-
-	cout << endl;*/
-
-	//vector<vector<string> > pieces = ip.getPieces();
-
-	// print out the pieces
-	/*for(int i=0;i<pieces.size();i++)
-	{
-		for(int j=0;j<pieces[i].size();j++)
-			cout << pieces[i][j] << endl;
-		cout << endl;
-	}*/
-
-	/* convert tile solver to exact set cover */
-
-	vector<int> v;
-	vector<vector<int> > matrix;
-	
-	/*v = {1,0,1,1,1,0,0,0};
-	matrix.push_back(v);
-	
-	v = {1,0,0,0,1,1,1,0};
-	matrix.push_back(v);
-	
-	v = {1,0,1,0,1,1,0,0};
-	matrix.push_back(v);
-	
-	v = {1,0,0,0,1,0,1,1};
-	matrix.push_back(v);
-	
-	v = {0,1,1,1,0,1,0,0};
-	matrix.push_back(v);
-	
-	v = {0,1,0,0,1,1,0,1};
-	matrix.push_back(v);
-	
-	v = {0,1,0,1,1,1,0,0};
-	matrix.push_back(v);
-
-	v = {0,1,0,0,0,1,1,1};
-	matrix.push_back(v);*/
-
-	/*v = {0,0,1,0,1,1,0};
-	matrix.push_back(v);
-	
-	v = {1,0,0,1,0,0,1};
-	matrix.push_back(v);
-	
-	v = {0,1,1,0,0,1,0};
-	matrix.push_back(v);
-	
-	v = {1,0,0,1,0,0,0};
-	matrix.push_back(v);
-	
-	v = {0,1,0,0,0,0,1};
-	matrix.push_back(v);
-	
-	v = {0,0,0,1,1,0,1};
-	matrix.push_back(v);*/
-
-	/*int vv1[] = {0,0,1,0,1,1,0};
-	vector<int> v1(vv1,vv1+sizeof(vv1)/sizeof(int));
-	matrix.push_back(v1);
-
-	int vv2[] = {1,0,0,1,0,0,1};
-	vector<int> v2(vv2,vv2+sizeof(vv2)/sizeof(int));
-	matrix.push_back(v2);
-
-	int vv3[] = {0,1,1,0,0,1,0};
-	vector<int> v3(vv3,vv3+sizeof(vv3)/sizeof(int));
-	matrix.push_back(v3);
-
-	int vv4[] = {1,0,0,1,0,0,0}; 
-	vector<int> v4(vv4,vv4+sizeof(vv4)/sizeof(int));
-	matrix.push_back(v4);
-
-	int vv5[] = {0,1,0,0,0,0,1};
-	vector<int> v5(vv5,vv5+sizeof(vv5)/sizeof(int));
-	matrix.push_back(v5);
-
-	int vv6[] = {0,0,0,1,1,0,1};
-	vector<int> v6(vv6,vv6+sizeof(vv6)/sizeof(int));
-	matrix.push_back(v6);*/
-
-	/*int vv1[] = {1,0};
-    vector<int> v1(vv1,vv1+sizeof(vv1)/sizeof(int));
-    matrix.push_back(v1);
-
-    int vv2[] = {1,1};
-    vector<int> v2(vv2,vv2+sizeof(vv2)/sizeof(int));
-    matrix.push_back(v2);
-
-    int vv3[] = {0,1};
-    vector<int> v3(vv3,vv3+sizeof(vv3)/sizeof(int));
-    matrix.push_back(v3);*/
-
-	
-	int vv1[] = {1,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0};
-    vector<int> v1(vv1,vv1+sizeof(vv1)/sizeof(int));
-    matrix.push_back(v1);
-
-    int vv2[] = {1,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0};
-    vector<int> v2(vv2,vv2+sizeof(vv2)/sizeof(int));
-    matrix.push_back(v2);
-
-    int vv3[] = {1,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0};
-    vector<int> v3(vv3,vv3+sizeof(vv3)/sizeof(int));
-    matrix.push_back(v3);
-
-    int vv4[] = {1,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0};
-    vector<int> v4(vv4,vv4+sizeof(vv4)/sizeof(int));
-    matrix.push_back(v4);
-
-    int vv5[] = {1,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0};
-    vector<int> v5(vv5,vv5+sizeof(vv5)/sizeof(int));
-    matrix.push_back(v5);
-
-    int vv6[] = {1,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0};
-    vector<int> v6(vv6,vv6+sizeof(vv6)/sizeof(int));
-    matrix.push_back(v6);
-
-    int vv7[] = {1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0};
-    vector<int> v7(vv7,vv7+sizeof(vv7)/sizeof(int));
-    matrix.push_back(v7);
-     		
-    int vv8[] = {1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0};
-    vector<int> v8(vv8,vv8+sizeof(vv8)/sizeof(int));
-    matrix.push_back(v8);
-     		
-    int vv9[] = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1};
-    vector<int> v9(vv9,vv9+sizeof(vv9)/sizeof(int));
-    matrix.push_back(v9);
-
-    int vv11[] = {0,1,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0};
-    vector<int> v11(vv11,vv11+sizeof(vv11)/sizeof(int));
-    matrix.push_back(v11);
-
-    int vv12[] = {0,1,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0};
-    vector<int> v12(vv12,vv12+sizeof(vv12)/sizeof(int));
-    matrix.push_back(v12);
-
-    int vv13[] = {0,1,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0};
-    vector<int> v13(vv13,vv13+sizeof(vv13)/sizeof(int));
-    matrix.push_back(v13);
-
-    int vv14[] = {0,1,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0};
-    vector<int> v14(vv14,vv14+sizeof(vv14)/sizeof(int));
-    matrix.push_back(v14);
-
-    int vv15[] = {0,1,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0};
-    vector<int> v15(vv15,vv15+sizeof(vv15)/sizeof(int));
-    matrix.push_back(v15);
-
-    int vv16[] = {0,1,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0};
-    vector<int> v16(vv16,vv16+sizeof(vv16)/sizeof(int));
-    matrix.push_back(v16);
-
-    int vv17[] = {0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0};
-    vector<int> v17(vv17,vv17+sizeof(vv17)/sizeof(int));
-    matrix.push_back(v17);
-     		
-    int vv18[] = {0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0};
-    vector<int> v18(vv18,vv18+sizeof(vv18)/sizeof(int));
-    matrix.push_back(v18);
-     		
-    int vv19[] = {0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1};
-    vector<int> v19(vv19,vv19+sizeof(vv19)/sizeof(int));
-    matrix.push_back(v19);
-
-    int vv21[] = {0,0,1,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0};
-    vector<int> v21(vv21,vv21+sizeof(vv21)/sizeof(int));
-    matrix.push_back(v21);
-
-    int vv22[] = {0,0,1,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0};
-    vector<int> v22(vv22,vv22+sizeof(vv22)/sizeof(int));
-    matrix.push_back(v22);
-
-    int vv23[] = {0,0,1,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0};
-    vector<int> v23(vv23,vv23+sizeof(vv23)/sizeof(int));
-    matrix.push_back(v23);
-
-    int vv24[] = {0,0,1,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0};
-    vector<int> v24(vv24,vv24+sizeof(vv24)/sizeof(int));
-    matrix.push_back(v24);
-
-    int vv25[] = {0,0,1,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0};
-    vector<int> v25(vv25,vv25+sizeof(vv25)/sizeof(int));
-    matrix.push_back(v25);
-
-    int vv26[] = {0,0,1,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0};
-    vector<int> v26(vv26,vv26+sizeof(vv26)/sizeof(int));
-    matrix.push_back(v26);
-
-    int vv27[] = {0,0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0};
-    vector<int> v27(vv27,vv27+sizeof(vv27)/sizeof(int));
-    matrix.push_back(v27);
-     		
-    int vv28[] = {0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0};
-    vector<int> v28(vv28,vv28+sizeof(vv28)/sizeof(int));
-    matrix.push_back(v28);
-     		
-    int vv29[] = {0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1};
-    vector<int> v29(vv29,vv29+sizeof(vv29)/sizeof(int));
-    matrix.push_back(v29);
-
-    int vv31[] = {0,0,0,1,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0};
-    vector<int> v31(vv31,vv31+sizeof(vv31)/sizeof(int));
-    matrix.push_back(v31);
-
-    int vv32[] = {0,0,0,1,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0};
-    vector<int> v32(vv32,vv32+sizeof(vv32)/sizeof(int));
-    matrix.push_back(v32);
-
-    int vv33[] = {0,0,0,1,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0};
-    vector<int> v33(vv33,vv33+sizeof(vv33)/sizeof(int));
-    matrix.push_back(v33);
-
-    int vv34[] = {0,0,0,1,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0};
-    vector<int> v34(vv34,vv34+sizeof(vv4)/sizeof(int));
-    matrix.push_back(v34);
-
-    int vv35[] = {0,0,0,1,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0};
-    vector<int> v35(vv35,vv35+sizeof(vv35)/sizeof(int));
-    matrix.push_back(v35);
-
-    int vv36[] = {0,0,0,1,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0};
-    vector<int> v36(vv36,vv36+sizeof(vv36)/sizeof(int));
-    matrix.push_back(v36);
-
-    int vv37[] = {0,0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0};
-    vector<int> v37(vv37,vv37+sizeof(vv37)/sizeof(int));
-    matrix.push_back(v37);
-     		
-    int vv38[] = {0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0};
-    vector<int> v38(vv38,vv38+sizeof(vv38)/sizeof(int));
-    matrix.push_back(v38);
-     		
-    int vv39[] = {0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1};
-    vector<int> v39(vv39,vv39+sizeof(vv39)/sizeof(int));
-    matrix.push_back(v39);
-
-	/*int vv1[] = {1,0,1,1,0,0,1,1,0,0,0};
-    vector<int> v1(vv1,vv1+sizeof(vv1)/sizeof(int));
-    matrix.push_back(v1);
-
-	int vv2[] = {0,1,0,0,1,1,0,0,1,1,0};
-    vector<int> v2(vv2,vv2+sizeof(vv2)/sizeof(int));
-    matrix.push_back(v2);
-
-    int vv4[] = {1,0,0,0,1,1,0,0,1,1,0};
-    vector<int> v4(vv4,vv4+sizeof(vv4)/sizeof(int));
-    matrix.push_back(v4);
-
-    int vv5[] = {0,1,1,1,0,0,1,1,0,0,0};
-    vector<int> v5(vv5,vv5+sizeof(vv5)/sizeof(int));
-    matrix.push_back(v5);
-
-	int vv6[] = {0,0,0,0,0,0,0,0,0,0,1};
-    vector<int> v6(vv6,vv6+sizeof(vv6)/sizeof(int));
-    matrix.push_back(v6);*/
-
-
-
-	// print out the set cover matrix
-	/*for(int i=0;i<matrix.size();i++)
-	{
-		for(int j=0;j<matrix[0].size();j++)
-			cout << matrix[i][j] << " ";
-		cout << endl;
-	}*/
-	
 
 	/* dancing link */
 	double  stime = 0.0,
@@ -421,6 +139,16 @@ int main(int argc, char* argv[])
 
     if(MASTER)
 	{
+		inputParser ip; 
+		ip.startParsers(argv[1]);
+
+		vector<string> board = ip.getBoard();
+		vector <vector<string> > pieces = ip.getPieces();
+
+		TileToSC sc(pieces,board);
+		sc.startConvert();
+		vector <vector<int> > matrix = sc.getSet();
+
 		dl = new DL(matrix);		
 		dl->search(0,0);
 		cout <<id << " find solutions: " << totalSolutions << endl;
@@ -513,7 +241,7 @@ int main(int argc, char* argv[])
 	if (MASTER)
 	{
 		cout << "Max processing at any node is " << maxtime << " second(s)\n";
-		cout << "Sequenctial processing time is " <<     seqetime - stime << " second(s)\n";
+		cout << "Sequenctial processing time is " << seqetime - stime << " second(s)\n";
 	}
 
 	if(MASTER)

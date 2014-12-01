@@ -149,6 +149,13 @@ inputParser::parsePieces(vector<string> input,int width)
 
 				// update the puzzle
 				if(maxNumPiece < tempNumPiece) {maxNumPiece=tempNumPiece;puzzleNum = n-1;}
+
+				for(int i=0;i<newPiece.size();i++)
+					for(int j=newPiece[i].size()-1;j>=0;j--)
+						if(newPiece[i][j]==' '){
+							newPiece[i] = newPiece[i].substr(0,newPiece[i].size()-1);
+						}
+						else break;
 				m_pieces.push_back(newPiece);
 			}
 			n++;

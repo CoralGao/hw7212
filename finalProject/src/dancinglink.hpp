@@ -38,6 +38,7 @@ public:
 	void cover(int c);
 	void uncover(int c);
 	bool search(int k, int max=-1);
+	int getFound() { return totalSolutionsFound; }
 private:
 	int getData(int a[], int k);
 
