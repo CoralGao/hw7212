@@ -1,5 +1,6 @@
 CC=g++
-CXXFLAGS=-g -std=c++11
+MPICC = mpiCC
+CXXFLAGS=-g 
 LDFLAGS=
 #SOURCES=parserInput.hpp parserInput.cpp tileSolver.hpp tileSolver.cpp
 EXECUTABLE=tileSolver
@@ -7,7 +8,7 @@ EXECUTABLE=tileSolver
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): bin/parserInput.o bin/tileToSetCover.o bin/dancinglink.o 
-		$(CC) $(CXXFLAGS) $(LDFLAGS) -o tileSolver src/main.cpp bin/parserInput.o bin/tileToSetCover.o bin/dancinglink.o
+		$(MPICC) -o tileSolver src/main.cpp bin/parserInput.o bin/tileToSetCover.o bin/dancinglink.o
 
 bin/parserInput.o: src/parserInput.cpp
 		$(CC) $(CXXFLAGS) $(LDFLAGS) -c src/parserInput.cpp -o bin/parserInput.o

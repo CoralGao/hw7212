@@ -140,24 +140,15 @@ void DL::uncover(int c)
 }
 
 bool DL::search(int k, int max)
-{	
-	if(max != -1 && k > max)
+{
+	if(max != -1 && k > max && root->right != root)
 	{
 		if(totalsubset == 0) metadata[0] = 0;
-		else metadata[totalsubset*2] = metadata[totalsubset*2-2]+metadata[totalsubset*2-1];
+		else metadata[totalsubset*2] = metadata[totalsubset*2-1] + 1;
 
-		metadata[totalsubset*2+1] = this->getData(dataset,metadata[totalsubset*2]);
-
-		// cout the remain matrix<sub problem>
-		/*int start = metadata[totalsubset*2];
-		for(int i=0;i<metadata[totalsubset*2+1];i++)
-		//{
-			cout << dataset[start+i];
-		//}
-
-		cout << endl;*/
-
+		metadata[totalsubset*2+1] = metadata[totalsubset*2] + this->getData(dataset,metadata[totalsubset*2])-1;
 		totalsubset++;
+
 		return true;
 	}
 
@@ -186,6 +177,7 @@ bool DL::search(int k, int max)
 	{
 		Node* nodeR = tempC;
 		Node* tempR = tempC->right;
+
 		while(tempR != nodeR)
 		{
 			cover(tempR->col);
@@ -211,8 +203,8 @@ int
 DL::getData(int a[], int k)
 {
 	int l = 0,
-		col = 0,
-		c = 0;
+	    col = 0,
+	    c = 0;
 	map <int,int> lines;
 
 	ColunmHeader* choose = (ColunmHeader*)root->right, *temp=choose;
@@ -250,7 +242,6 @@ DL::getData(int a[], int k)
 		Node* tempC = temp->down;
 		while(tempC!=temp)
 		{
-			//cout << tempC->row << " " << tempC->col << endl;
 			a[k+2+lines[tempC->row]+c*lines.size()] = 1;
 			tempC = tempC->down;
 		}
