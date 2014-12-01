@@ -7,11 +7,14 @@ EXECUTABLE=tileSolver
 
 all: $(EXECUTABLE)
 
-$(EXECUTABLE): bin/parserInput.o bin/tileToSetCover.o bin/dancinglink.o 
+$(EXECUTABLE): binfolder bin/parserInput.o bin/tileToSetCover.o bin/dancinglink.o 
 		$(MPICC) -o tileSolver src/main.cpp bin/parserInput.o bin/tileToSetCover.o bin/dancinglink.o
 
 #$(EXECUTABLE): bin/tileToSetCover.o bin/parserInput.o bin/dancinglink.o 
 #		$(CC) -o tileSolver src/main.cpp bin/tileToSetCover.o bin/parserInput.o bin/dancinglink.o 
+
+binfolder:
+		mkdir bin
 
 bin/parserInput.o: src/parserInput.cpp
 		$(CC) $(CXXFLAGS) $(LDFLAGS) -c src/parserInput.cpp -o bin/parserInput.o
