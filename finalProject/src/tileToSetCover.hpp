@@ -46,14 +46,24 @@ private:
 	vector<vector<string> >
 	insertTile(vector<vector<string> > pieces);
 
+	vector<vector<string> >
+	insertTile(vector<vector<string> > pieces,  vector<vector<string> > board);
+
 	vector <string>
 	insert(int r,int c, vector<string> p);
+
+	vector <string>
+	insert(int r,int c, vector<string> p, vector<vector<string> > board);
 
 	bool
 	isDuplicate(vector<string> t, vector<vector<string> > r);
 
 	void
 	generateResultSet(int n, vector<vector <string> > r);
+
+	void
+	generateResultSet(int n, vector<vector <string> > r, vector<vector<string> > board)
+
 
 private:
 	vector<vector<string> > m_pieces;

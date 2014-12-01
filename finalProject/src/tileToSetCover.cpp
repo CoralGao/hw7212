@@ -39,6 +39,7 @@ TileToSC::startConvert()
 
 		if(isIn == -1){
 			vector<vector <string> > tempSet = insertTile(allDifferent);
+			generateResultSet(i,tempSet);
 			resultMap[i] =  tempSet;
 			/*for(int ii=0;ii<tempSet.size();ii++)
 			{
@@ -47,11 +48,15 @@ TileToSC::startConvert()
 				cout << endl;
 			}*/
 			//cout << tempSet.size() << endl;
-			generateResultSet(i,tempSet);
+		} else {
+			vector<vector <string> > tempSet = insertTile(allDifferent,resultMap[isIn]);
+			generateResultSet(i,tempSet,resultMap[isIn]);
+			resultMap[isIn] = tempSet;
 		}
 	}
 
-	return true;
+	if(m_set.size()!=0) return true;
+	else return false;
 }
 
 vector <vector<string> >
@@ -204,6 +209,32 @@ TileToSC::insertTile(vector<vector<string> > pieces)
 	return result;
 }
 
+vector<vector<string> >
+TileToSC::insertTile(vector<vector<string> > pieces,  vector<vector<string> > board)
+{
+	vector<vector<string> > result;
+	int h;
+
+	for(int i=0;i<pieces.size();i++){
+		vector<string> p = pieces[i];
+		h = p.size();
+
+		for(int j=0;j<board.size();j++){
+			if(j+h>board.size()) break;
+
+			for(int k=0;k<board[j].size();k++){
+
+				vector <string> t = insert(j,k,p,board);
+				if(t.size()==board.size() && !isDuplicate(t,result)) { 
+					result.push_back(t);
+				}
+ 			}
+		}
+	}
+
+	return result;
+}
+
 vector <string>
 TileToSC::insert(int r,int c, vector<string> p)
 {	
@@ -219,6 +250,31 @@ TileToSC::insert(int r,int c, vector<string> p)
 
 		for(int j=0;j<p[i].size();j++)
 			if(p[i][j]!=' ' && m_board[r+i][c+j]!=p[i][j]) {ret = -1; break;}
+			else if(p[i][j]!=' ') {result[r+i][c+j] = ' ';}
+
+		if(ret == -1) break;
+	}
+
+	if(ret == -1) result.push_back(t);
+
+	return result;	
+}
+
+vector <string>
+TileToSC::insert(int r,int c, vector<string> p, vector<vector<string> > board)
+{	
+	vector <string> result;
+	string t="";
+	int ret=1;
+
+	for(int i=0;i<board.size();i++)
+		result.push_back(board[i]);
+
+	for(int i=0;i<p.size();i++){
+		if(p[i].size()+c>board[r].size()) { ret = -1; break; }
+
+		for(int j=0;j<p[i].size();j++)
+			if(p[i][j]!=' ' && board[r+i][c+j]!=p[i][j]) {ret = -1; break;}
 			else if(p[i][j]!=' ') {result[r+i][c+j] = ' ';}
 
 		if(ret == -1) break;
@@ -275,9 +331,34 @@ TileToSC::generateResultSet(int n, vector<vector <string> > r)
 				else t.push_back(0);
 		}
 
-		for(int ii=0;ii<t.size();ii++)
-			cout << t[ii] << " ";
-		cout << endl;
+		//for(int ii=0;ii<t.size();ii++)
+		//	cout << t[ii] << " ";
+		//cout << endl;
+
+		m_set.push_back(t);
+	}
+}
+
+void
+TileToSC::generateResultSet(int n, vector<vector <string> > r, vector<vector<string> > board)
+{
+	for(int i=0;i<r.size();i++)
+	{
+		vector <string> temp = r[i];
+		vector <int> t;
+		for(int j=0;j<m_pieces.size();j++) t.push_back(0);
+		t[n] = 1;
+
+		for(int j=0;j<temp.size();j++)
+		{
+			for(int k=0;k<temp[j].size();k++)
+				if(temp[j][k]!=board[j][k]) t.push_back(1);
+				else t.push_back(0);
+		}
+
+		//for(int ii=0;ii<t.size();ii++)
+		//	cout << t[ii] << " ";
+		//cout << endl;
 
 		m_set.push_back(t);
 	}
