@@ -62,7 +62,7 @@ private:
 	generateResultSet(int n, vector<vector <string> > r);
 
 	void
-	generateResultSet(int n, vector<vector <string> > r, vector<vector<string> > board)
+	generateResultSet(int n, vector<vector <string> > r, vector<vector<string> > board);
 
 
 private:
