@@ -29,13 +29,18 @@ TileToSC::startConvert()
 			cout << endl;
 		}*/
 
-		for(map<int, vector<vector<string> > >::iterator it=pieceMap.begin(); it!=pieceMap.end(); it++)
+		vector<string> temp = allDifferent[0];
+
+		for(map<int, vector<vector<string> > >::iterator it=pieceMap.begin(); it!=pieceMap.end(); ++it)
 		{
 			if(isInSet(allDifferent[0],it->second)){
 				isIn = it->first;
 				break;
 			}
 		}
+
+		if(isIn == -1)
+			pieceMap[i] = allDifferent;
 
 		if(isIn == -1){
 			vector<vector <string> > tempSet = insertTile(allDifferent);
