@@ -30,20 +30,20 @@ struct ColunmHeader : public Node
 
 class DL
 {
-	public:
-		int ROWS, COLS;
-	 	DL(vector<vector<int> > matrix);
-		~DL();
-		void insert(int r, int c);
-		void cover(int c);
-		void uncover(int c);
-		bool search(int k, int max=-1);
-	private:
-		int getData(int a[], int k);
+public:
+	int ROWS, COLS;
+ 	DL(vector<vector<int> > matrix);
+	~DL();
+	void insert(int r, int c);
+	void cover(int c);
+	void uncover(int c);
+	bool search(int k, int max=-1);
+private:
+	int getData(int a[], int k);
 
-	private:
-		ColunmHeader* root;
-		ColunmHeader* ColIndex;
-		Node* RowIndex;
-		int totalSolutionsFound;
+private:
+	ColunmHeader* root;
+	ColunmHeader* ColIndex;
+	Node* RowIndex;
+	int totalSolutionsFound;
 };

@@ -72,6 +72,7 @@ void DL::insert(int r, int c)
 	Node* newNode = new Node(r, c);
 	while(temp->down != &ColIndex[c] && temp->down->row < r)
 		temp = temp->down;
+	
 	newNode->down = temp->down;
 	newNode->up = temp;
 	temp->down->up = newNode;
