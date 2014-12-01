@@ -53,7 +53,7 @@ private:
 	insert(int r,int c, vector<string> p);
 
 	vector <string>
-	insert(int r,int c, vector<string> p, vector<vector<string> > board);
+	insert(int r,int c, vector<string> p, vector<string> board);
 
 	bool
 	isDuplicate(vector<string> t, vector<vector<string> > r);

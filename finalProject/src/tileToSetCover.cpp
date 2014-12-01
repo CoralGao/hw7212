@@ -264,7 +264,7 @@ TileToSC::insert(int r,int c, vector<string> p)
 }
 
 vector <string>
-TileToSC::insert(int r,int c, vector<string> p, vector<vector<string> > board)
+TileToSC::insert(int r,int c, vector<string> p, vector<string> board)
 {	
 	vector <string> result;
 	string t="";
