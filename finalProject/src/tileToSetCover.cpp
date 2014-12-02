@@ -31,7 +31,7 @@ TileToSC::startConvert()
 
 		vector<string> temp = allDifferent[0];
 
-		for(map<int, vector<vector<string> > >::iterator it=pieceMap.begin(); it!=pieceMap.end(); ++it)
+		/*for(map<int, vector<vector<string> > >::iterator it=pieceMap.begin(); it!=pieceMap.end(); ++it)
 		{
 			if(isInSet(allDifferent[0],it->second)){
 				isIn = it->first;
@@ -40,9 +40,9 @@ TileToSC::startConvert()
 		}
 
 		if(isIn == -1)
-			pieceMap[i] = allDifferent;
+			pieceMap[i] = allDifferent;*/
 
-		if(isIn == -1){
+		//if(isIn == -1){
 			vector<vector <string> > tempSet = insertTile(allDifferent);
 			generateResultSet(i,tempSet);
 			resultMap[i] =  tempSet;
@@ -53,11 +53,11 @@ TileToSC::startConvert()
 				cout << endl;
 			}*/
 			//cout << tempSet.size() << endl;
-		} else {
-			vector<vector <string> > tempSet = insertTile(allDifferent,resultMap[isIn]);
-			generateResultSet(isIn,i,tempSet);
-			resultMap[isIn] = tempSet;
-		}
+		//} else {
+		//	vector<vector <string> > tempSet = insertTile(allDifferent,resultMap[isIn]);
+		//	generateResultSet(isIn,i,tempSet);
+		//	resultMap[isIn] = tempSet;
+		//}
 	}
 
 	if(m_set.size()!=0) return true;
@@ -199,7 +199,7 @@ TileToSC::insertTile(vector<vector<string> > pieces)
 			for(int k=0;k<m_board[j].size();k++){
 
 				vector <string> t = insert(j,k,p);
-				if(t.size()==m_board.size() && !isDuplicate(t,result)) { 
+				if(t.size()==m_board.size() /*&& !isDuplicate(t,result)*/) { 
 					result.push_back(t);
 					/*for(int ii=0;ii<t.size();ii++)
 					{
@@ -232,7 +232,7 @@ TileToSC::insertTile(vector<vector<string> > pieces,  vector<vector<string> > bo
 				for(int k=0;k<board[j].size();k++){
 
 					vector <string> t = insert(j,k,p,board);
-					if(t.size()==board.size() && !isDuplicate(t,result)) { 
+					if(t.size()==board.size() /*&& !isDuplicate(t,result)*/) { 
 						result.push_back(t);
 					}
 				}

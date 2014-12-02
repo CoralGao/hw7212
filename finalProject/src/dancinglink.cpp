@@ -5,7 +5,7 @@
 
 using namespace std;
 
-extern int dataset[10000];
+extern int dataset[10000000];
 extern int metadata[MAX_PROC_NUMBER * 2];
 extern int totalsubset;
 extern int totalSolutions;

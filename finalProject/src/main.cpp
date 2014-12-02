@@ -17,7 +17,7 @@ Author: Minsheng Zhang
 #include <stack>
 
 using namespace std;
-int dataset[10000];
+int dataset[10000000];
 int metadata[MAX_PROC_NUMBER * 2];
 int totalsubset = 0;
 int totalSolutions = 0;
@@ -145,13 +145,23 @@ int main(int argc, char* argv[])
 		vector<string> board = ip.getBoard();
 		vector <vector<string> > pieces = ip.getPieces();
 
+		cout << "Start Convert to Exact Cover.." << endl;
 		TileToSC sc(pieces,board);
 		sc.startConvert();
 		vector <vector<int> > matrix = sc.getSet();
+		/*for(int i=0;i<matrix.size();i++)
+		{
+			for(int j=0;j<matrix[i].size();j++)
+				cerr << matrix[i][j] << " ";
+			cerr << endl;
+		}*/
 
+		cout << "Finish Convert.." << endl;
+		cout << "Start Master Process to search the result.."<< endl;
 		dl = new DL(matrix);		
 		dl->search(0,0);
-		cout <<id << " find solutions: " << totalSolutions << endl;
+
+		cout << "Ending the Master process search.." << endl;
 	}
 
 	seqetime = MPI_Wtime();
