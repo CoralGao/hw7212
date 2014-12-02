@@ -41,10 +41,13 @@ public:
 	int getFound() { return totalSolutionsFound; }
 private:
 	int getData(int a[], int k);
+	void pushPartial(int n);
 
 private:
 	ColunmHeader* root;
 	ColunmHeader* ColIndex;
 	Node* RowIndex;
 	int totalSolutionsFound;
+	vector <int> partialResult;
+
 };

@@ -9,6 +9,8 @@ extern int dataset[10000000];
 extern int metadata[MAX_PROC_NUMBER * 2];
 extern int totalsubset;
 extern int totalSolutions;
+extern int resultSet[4];
+extern int resultData[10000000];
 
 DL::DL(vector<vector<int> > matrix)
 {
@@ -155,6 +157,14 @@ bool DL::search(int k, int max)
 
 	if(root->right == root)
 	{
+		resultData[resultSet[1]] = partialResult.size();
+
+		for(int i=0;i<partialResult.size();i++)
+		{
+			resultData[resultSet[1]+i+1] = partialResult[i];
+		}
+
+		resultSet[1]+=partialResult.size()+1;
 		totalSolutionsFound++;
 		totalSolutions++;
 		return true;
@@ -169,11 +179,15 @@ bool DL::search(int k, int max)
 	}
 
 	if(choose->size == 0)
+	{
 		return false;
+	}
 
 	cover(choose->col);
 
 	Node* tempC = choose->down;
+	partialResult.push_back(tempC->row);
+
 	while(tempC != choose)
 	{
 		Node* nodeR = tempC;
@@ -193,6 +207,7 @@ bool DL::search(int k, int max)
 			uncover(tempR->col);
 			tempR = tempR->left;
 		}
+		partialResult.pop_back();
 		tempC = tempC->down;
 	}
 
@@ -207,6 +222,12 @@ DL::getData(int a[], int k)
 	    col = 0,
 	    c = 0;
 	map <int,int> lines;
+
+	a[k] = partialResult.size();
+	for(int i=0;i<partialResult.size();i++)
+		a[k+1+i] = partialResult[i];
+
+	k += 1+partialResult.size();
 
 	ColunmHeader* choose = (ColunmHeader*)root->right, *temp=choose;
 	while(temp!=root)
@@ -250,5 +271,10 @@ DL::getData(int a[], int k)
 		temp = (ColunmHeader*)temp->right;
 	}
 
-	return lines.size()*col+2;	
+	return partialResult.size()+1+lines.size()*col+2;	
+}
+
+void 
+DL::pushPartial(int n){
+		partialResult.push_back(n);
 }

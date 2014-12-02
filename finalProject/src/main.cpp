@@ -21,10 +21,13 @@ int dataset[10000000];
 int metadata[MAX_PROC_NUMBER * 2];
 int totalsubset = 0;
 int totalSolutions = 0;
+int resultSet[4];
+int resultData[10000000];
 
 DL *dl = NULL;
 
 int scatterMetaData(int *data, int *metadata, int metadatasize, int P, int p);
+void scatterResult(int *result, int *resultSet, int P, int p)
 
 int 
 scatterMetaData(int *data,
@@ -86,7 +89,6 @@ scatterMetaData(int *data,
 		metadatasize = rcvMetadatasize;
 	}
 
-	
 	while (pN > 1)
 	{
 		newN = (int) ceil(pN*1.0/2);
@@ -108,6 +110,49 @@ scatterMetaData(int *data,
 	return metadatasize;
 }
 
+void 
+scatterResult(int *result, int *resultSet, int P, int p)
+{
+	int	pN = P,
+		idx = 0,
+		tag = 101,
+		rcvMetadatasize,
+		sndMetadatasize,
+		datasize,
+		newN;
+
+	bool 	isMaster = (p == 0);
+
+	MPI_Status	status;
+
+	if(isMaster)
+	{		
+
+		for(int i=1;i<pN;i++)
+		{
+			rcvMetadatasize = 2
+			MPI_Recv(resultSet+2, 2, MPI_INTEGER, i, tag, MPI_COMM_WORLD,&status);
+
+			datasize = resultSet[3]-resultSet[2];
+			MPI_Recv(data+resultSet[1], datasize, MPI_INTEGER, i, tag, MPI_COMM_WORLD, &status);
+			resultSet[1]+=datasize;
+		}
+	}
+
+	
+	if(!isMaster)
+	{
+		sndMetadatasize = 2;
+	
+		MPI_Send(resultSet, 2, MPI_INTEGER, p, tag, MPI_COMM_WORLD);
+
+		datasize = resultSet[1]-resultSet[0];
+	
+		MPI_Send(resultData,datasize, MPI_INTEGER, p+newN, tag, MPI_COMM_WORLD);
+	}
+}
+
+
 int main(int argc, char* argv[])
 {
 	int initExploreLevel = 0;
@@ -126,15 +171,17 @@ int main(int argc, char* argv[])
     int	id,
 		ierr,
 		tag = 100;
-		
+			
 	/* Initialize MPI */
 	ierr = MPI_Init(&argc, &argv);
 	ierr = MPI_Comm_size(MPI_COMM_WORLD, &size);
 	ierr = MPI_Comm_rank(MPI_COMM_WORLD, &id);
 	/* Initialization finishes */
 
+	resultSet[0] = 0; resultSet[1] = 0;
+
 	int MASTER = (id == 0);
-	
+
     stime = MPI_Wtime();
 
     if(MASTER)
@@ -190,6 +237,14 @@ int main(int argc, char* argv[])
 		int offset = metadata[i] - metadata[0];
 		int totalPartialResult = dataset[offset];
 
+		int partNum = dataset[offset];
+		vector <int> partialResult;
+		for(int ii=0;ii<partNum;ii++)
+		{
+			partialResult.push_back(dataset[offset+ii]);
+		}
+		offset += partNum+1;
+
 		int rows = dataset[offset];
 		int cols = dataset[offset+1];
 
@@ -218,13 +273,24 @@ int main(int argc, char* argv[])
 		
 		if(subMatrix.size()==0 && subMatrix[0].size()==0){
 			totalSolutions++;
+			// put all the partial solutions into the site.
+			// These partial should be put..
+			for(int ii=0;ii<partialResult.size();ii++)
+				dataset[resultSet[1]+ii] = partialResult[ii];
+			resultSet[1] += partialResult.size()+1;
+
 			// to do, cout the partial result
 		}else if(subMatrix.size()!=0&&subMatrix[0].size()!=0){
 			dl = new DL(subMatrix);
+
+			for(int ii=0;ii<partialResult.size();ii++)
+				dl->pushPartial(partialResult[ii]);
+
 			dl->search(0);
 			cout << id << " find solutions: " << totalSolutions << endl;
 			delete dl;
 		}
+
 		//cout << endl;
 		//runs for the subset problem
 
@@ -238,6 +304,8 @@ int main(int argc, char* argv[])
 			cout << endl;
 		}*/
 	}
+
+	scatterResult(resultSet,resultData,size,id);
 
 	//cout << totalSolutions << endl;
 	int grandTotalSolutions = 0;
