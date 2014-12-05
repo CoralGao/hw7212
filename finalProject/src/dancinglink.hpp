@@ -39,15 +39,15 @@ public:
 	void uncover(int c);
 	bool search(int k, int max=-1);
 	int getFound() { return totalSolutionsFound; }
+	void pushPartial(int i) { resultStack.push_back(i); }
+	void checkRows(vector<int> rows);
 private:
 	int getData(int a[], int k);
-	void pushPartial(int n);
 
 private:
 	ColunmHeader* root;
 	ColunmHeader* ColIndex;
 	Node* RowIndex;
 	int totalSolutionsFound;
-	vector <int> partialResult;
-
+	vector<int> resultStack;
 };

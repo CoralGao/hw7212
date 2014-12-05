@@ -21,13 +21,14 @@ int dataset[10000000];
 int metadata[MAX_PROC_NUMBER * 2];
 int totalsubset = 0;
 int totalSolutions = 0;
-int resultSet[4];
-int resultData[10000000];
+int resultPos[2];
+int resultSet[10000000];
 
 DL *dl = NULL;
+TileToSC *sc = NULL;
+vector <vector<int> > matrix;
 
 int scatterMetaData(int *data, int *metadata, int metadatasize, int P, int p);
-void scatterResult(int *result, int *resultSet, int P, int p)
 
 int 
 scatterMetaData(int *data,
@@ -89,6 +90,7 @@ scatterMetaData(int *data,
 		metadatasize = rcvMetadatasize;
 	}
 
+	
 	while (pN > 1)
 	{
 		newN = (int) ceil(pN*1.0/2);
@@ -110,48 +112,40 @@ scatterMetaData(int *data,
 	return metadatasize;
 }
 
-void 
-scatterResult(int *result, int *resultSet, int P, int p)
+void
+scatterResult(int *pos, int *data, int p, int NP)
 {
-	int	pN = P,
-		idx = 0,
+	int idx = 0,
 		tag = 101,
-		rcvMetadatasize,
-		sndMetadatasize,
 		datasize,
-		newN;
+		offset;
 
 	bool 	isMaster = (p == 0);
 
 	MPI_Status	status;
 
-	if(isMaster)
-	{		
-
-		for(int i=1;i<pN;i++)
-		{
-			rcvMetadatasize = 2
-			MPI_Recv(resultSet+2, 2, MPI_INTEGER, i, tag, MPI_COMM_WORLD,&status);
-
-			datasize = resultSet[3]-resultSet[2];
-			MPI_Recv(data+resultSet[1], datasize, MPI_INTEGER, i, tag, MPI_COMM_WORLD, &status);
-			resultSet[1]+=datasize;
-		}
-	}
-
-	
-	if(!isMaster)
-	{
-		sndMetadatasize = 2;
-	
-		MPI_Send(resultSet, 2, MPI_INTEGER, p, tag, MPI_COMM_WORLD);
-
-		datasize = resultSet[1]-resultSet[0];
-	
-		MPI_Send(resultData,datasize, MPI_INTEGER, p+newN, tag, MPI_COMM_WORLD);
+	if(!isMaster) {
+		MPI_Send(pos,2, MPI_INTEGER, idx, tag, MPI_COMM_WORLD);
+		datasize = pos[1]-pos[0]+1;
+		if(datasize ==0)
+			return;
+		MPI_Send(data,datasize, MPI_INTEGER, idx, tag, MPI_COMM_WORLD);
+	} else {
+		for(int i=0;i<NP-1;i++){
+			int a[2];
+			MPI_Recv(a, 2, MPI_INTEGER, i+1, tag, MPI_COMM_WORLD, &status);
+			
+			if(a[1]-a[0]<=0)
+				continue;
+			else{
+				datasize = a[1] - a[0] + 1;
+				offset = pos[1] - pos[0] + 1;
+				MPI_Recv(data+offset, datasize, MPI_INTEGER, i+1, tag, MPI_COMM_WORLD, &status);
+				pos[1] = pos[1] + datasize;
+			}
+		}	
 	}
 }
-
 
 int main(int argc, char* argv[])
 {
@@ -171,17 +165,15 @@ int main(int argc, char* argv[])
     int	id,
 		ierr,
 		tag = 100;
-			
+		
 	/* Initialize MPI */
 	ierr = MPI_Init(&argc, &argv);
 	ierr = MPI_Comm_size(MPI_COMM_WORLD, &size);
 	ierr = MPI_Comm_rank(MPI_COMM_WORLD, &id);
 	/* Initialization finishes */
 
-	resultSet[0] = 0; resultSet[1] = 0;
-
 	int MASTER = (id == 0);
-
+	
     stime = MPI_Wtime();
 
     if(MASTER)
@@ -193,9 +185,9 @@ int main(int argc, char* argv[])
 		vector <vector<string> > pieces = ip.getPieces();
 
 		cout << "Start Convert to Exact Cover.." << endl;
-		TileToSC sc(pieces,board);
-		sc.startConvert();
-		vector <vector<int> > matrix = sc.getSet();
+		sc = new TileToSC(pieces,board);
+		sc->startConvert();
+		matrix = sc->getSet();
 		/*for(int i=0;i<matrix.size();i++)
 		{
 			for(int j=0;j<matrix[i].size();j++)
@@ -236,18 +228,16 @@ int main(int argc, char* argv[])
 		//cout << metadata[i] << " " << metadata[i+1] << endl;
 		int offset = metadata[i] - metadata[0];
 		int totalPartialResult = dataset[offset];
+		vector <int> partial;
+		for(int j=0;j<totalPartialResult;j++)
+			partial.push_back(dataset[offset+1+j]);
 
-		int partNum = dataset[offset];
-		vector <int> partialResult;
-		for(int ii=0;ii<partNum;ii++)
-		{
-			partialResult.push_back(dataset[offset+ii]);
-		}
-		offset += partNum+1;
-
+		sort(partial.begin(),partial.end());
+		offset = offset+totalPartialResult+1;
 		int rows = dataset[offset];
 		int cols = dataset[offset+1];
-
+		vector<int> allrows;
+		int rowsize;
 		//int ndata = metadata[i+1];
 
 		//for(int j=0;j<ndata;j++)
@@ -270,27 +260,28 @@ int main(int argc, char* argv[])
 					subMatrix[k].push_back(temp);
 				}
 			}
-		
+	
+		offset = offset+rows*cols+1;
+		rowsize = dataset[offset];
+		for(int j=0;j<rowsize;j++){
+			allrows.push_back(dataset[offset+1+j]);
+		}
+		sort(allrows.begin(),allrows.end());
+
 		if(subMatrix.size()==0 && subMatrix[0].size()==0){
 			totalSolutions++;
-			// put all the partial solutions into the site.
-			// These partial should be put..
-			for(int ii=0;ii<partialResult.size();ii++)
-				dataset[resultSet[1]+ii] = partialResult[ii];
-			resultSet[1] += partialResult.size()+1;
-
 			// to do, cout the partial result
 		}else if(subMatrix.size()!=0&&subMatrix[0].size()!=0){
 			dl = new DL(subMatrix);
-
-			for(int ii=0;ii<partialResult.size();ii++)
-				dl->pushPartial(partialResult[ii]);
-
+			for(int ii=0;ii<partial.size();ii++)
+			{
+				dl->pushPartial(partial[ii]);
+			}
+			dl->checkRows(allrows);
 			dl->search(0);
-			cout << id << " find solutions: " << totalSolutions << endl;
+			//cout << id << " find solutions: " << totalSolutions << endl;
 			delete dl;
 		}
-
 		//cout << endl;
 		//runs for the subset problem
 
@@ -305,9 +296,20 @@ int main(int argc, char* argv[])
 		}*/
 	}
 
-	scatterResult(resultSet,resultData,size,id);
+	
+	scatterResult(resultPos,resultSet,id,size);
 
-	//cout << totalSolutions << endl;
+	if(MASTER)
+	{
+		for(int i=0;i<resultPos[1]-resultPos[0]+1;i++)
+		{
+			cout << resultSet[i] << " ";
+		}
+		cout << endl;
+
+		cout << "There are " << sc->getDiffResult(resultSet,resultPos[1]-resultPos[0]+1,matrix) << " different result." << endl;
+	}
+
 	int grandTotalSolutions = 0;
 	MPI_Reduce(&totalSolutions, &grandTotalSolutions, 1, MPI_INTEGER,
 		MPI_SUM, 0, MPI_COMM_WORLD);

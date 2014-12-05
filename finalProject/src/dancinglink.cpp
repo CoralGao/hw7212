@@ -2,18 +2,20 @@
 #include "def.h"
 #include <vector>
 #include <map>
-
+#include <algorithm>
 using namespace std;
 
 extern int dataset[10000000];
 extern int metadata[MAX_PROC_NUMBER * 2];
 extern int totalsubset;
 extern int totalSolutions;
-extern int resultSet[4];
-extern int resultData[10000000];
+extern int resultPos[2];
+extern int resultSet[10000000];
 
 DL::DL(vector<vector<int> > matrix)
 {
+	resultPos[0] = 0, resultPos[1] = -1;
+
 	int totalSolutionsFound = 0;
 	int rows = matrix.size();
 	int cols = matrix[0].size();
@@ -157,14 +159,16 @@ bool DL::search(int k, int max)
 
 	if(root->right == root)
 	{
-		resultData[resultSet[1]] = partialResult.size();
+		/*cout << "Find a solution:" << endl;
+		for(int i=0;i<resultStack.size();i++) cout << resultStack[i] << " "; 
+		cout << endl;*/
+	
+		resultSet[resultPos[1]+1] = resultStack.size();
+		for(int i=0;i<resultStack.size();i++){
+			resultSet[resultPos[1]+2+i] =resultStack[i];
+		}	
+		resultPos[1] += 1+resultStack.size();
 
-		for(int i=0;i<partialResult.size();i++)
-		{
-			resultData[resultSet[1]+i+1] = partialResult[i];
-		}
-
-		resultSet[1]+=partialResult.size()+1;
 		totalSolutionsFound++;
 		totalSolutions++;
 		return true;
@@ -179,18 +183,16 @@ bool DL::search(int k, int max)
 	}
 
 	if(choose->size == 0)
-	{
 		return false;
-	}
 
 	cover(choose->col);
 
 	Node* tempC = choose->down;
-	partialResult.push_back(tempC->row);
-
 	while(tempC != choose)
 	{
 		Node* nodeR = tempC;
+		resultStack.push_back(nodeR->row);		
+
 		Node* tempR = tempC->right;
 
 		while(tempR != nodeR)
@@ -207,7 +209,7 @@ bool DL::search(int k, int max)
 			uncover(tempR->col);
 			tempR = tempR->left;
 		}
-		partialResult.pop_back();
+		resultStack.pop_back();
 		tempC = tempC->down;
 	}
 
@@ -221,13 +223,13 @@ DL::getData(int a[], int k)
 	int l = 0,
 	    col = 0,
 	    c = 0;
+	vector<int> rows;
 	map <int,int> lines;
+	a[k] = resultStack.size();
+	for(int i=0;i<resultStack.size();i++)
+		a[k+i+1] = resultStack[i];
 
-	a[k] = partialResult.size();
-	for(int i=0;i<partialResult.size();i++)
-		a[k+1+i] = partialResult[i];
-
-	k += 1+partialResult.size();
+	k = k+1+resultStack.size();
 
 	ColunmHeader* choose = (ColunmHeader*)root->right, *temp=choose;
 	while(temp!=root)
@@ -265,16 +267,45 @@ DL::getData(int a[], int k)
 		while(tempC!=temp)
 		{
 			a[k+2+lines[tempC->row]+c*lines.size()] = 1;
+			rows.push_back(tempC->row);
 			tempC = tempC->down;
 		}
 		c++;
 		temp = (ColunmHeader*)temp->right;
 	}
 
-	return partialResult.size()+1+lines.size()*col+2;	
+	sort(rows.begin(),rows.end());
+	rows.erase(unique(rows.begin(),rows.end()),rows.end());
+	//cout << "the size of the rows is: " << rows.size() << " " << rows[0] << endl;
+	
+	a[k+2+lines.size()*col] = rows.size();
+	for(int i=0;i<rows.size();i++)
+		a[k+2+lines.size()*col+i] = rows[i];
+
+	return rows.size()+1+resultStack.size()+1+lines.size()*col+2;	
 }
 
-void 
-DL::pushPartial(int n){
-		partialResult.push_back(n);
+void
+DL::checkRows(vector<int> rows)
+{
+	if(rows.size()==0)
+		return;
+
+	/*for(int i=0;i<rows.size();i++)
+		cout << rows[i] << " ";*/
+
+        sort(rows.begin(),rows.end());
+
+        ColunmHeader* chooseC = (ColunmHeader*)root->right;
+        while(chooseC != root)
+        {
+        	Node * tempC = chooseC->down;
+                while (chooseC != tempC)
+                {
+                	tempC->row = rows[tempC->row];
+                	tempC = tempC->down;
+                }
+
+                chooseC = (ColunmHeader*)chooseC->right;
+        }
 }

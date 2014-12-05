@@ -12,9 +12,6 @@ using namespace std;
 bool
 TileToSC::startConvert()
 {
-	map<int, vector<vector<string> > > pieceMap;
-	map<int, vector<vector<string> > > resultMap;
-
 	for(int i=0;i<m_pieces.size();i++)
 	{
 		// add the tempSet to the m_set
@@ -43,9 +40,8 @@ TileToSC::startConvert()
 			pieceMap[i] = allDifferent;*/
 
 		//if(isIn == -1){
-			vector<vector <string> > tempSet = insertTile(allDifferent);
-			generateResultSet(i,tempSet);
-			resultMap[i] =  tempSet;
+		vector<vector <string> > tempSet = insertTile(allDifferent);
+		generateResultSet(i,tempSet);
 			/*for(int ii=0;ii<tempSet.size();ii++)
 			{
 				for(int jj=0;jj<tempSet[ii].size();jj++)
@@ -62,6 +58,12 @@ TileToSC::startConvert()
 
 	if(m_set.size()!=0) return true;
 	else return false;
+}
+
+int
+TileToSC::getDiffResult(int *data, int size, vector<vector<int> >m)
+{
+	return 1;
 }
 
 vector <vector<string> >

@@ -26,6 +26,9 @@ public:
 	{
 		return m_set;
 	}
+	
+	int
+	getDiffResult(int *data, int size, vector<vector<int> >m);
 
 private:
 	vector <vector<string> >
