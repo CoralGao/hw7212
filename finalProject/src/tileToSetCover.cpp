@@ -467,7 +467,7 @@ TileToSC::generateResultSet(int n, vector<vector <string> > r)
 	}
 }
 
-void
+/*void
 TileToSC::generateResultSet(int ind, int n, vector<vector <string> > r)
 {
 	for(int i=0;i<r.size();i++)
@@ -500,4 +500,4 @@ TileToSC::generateResultSet(int ind, int n, vector<vector <string> > r)
 
 		m_set.push_back(t);
 	}
-}
+}*/

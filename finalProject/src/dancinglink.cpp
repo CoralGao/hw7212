@@ -9,12 +9,12 @@ extern int dataset[10000000];
 extern int metadata[MAX_PROC_NUMBER * 2];
 extern int totalsubset;
 extern int totalSolutions;
-extern int resultPos[2];
-extern int resultSet[10000000];
+//extern int resultPos[2];
+//extern int resultSet[10000000];
 
 DL::DL(vector<vector<int> > matrix)
 {
-	resultPos[0] = 0, resultPos[1] = -1;
+	//resultPos[0] = 0, resultPos[1] = -1;
 
 	int totalSolutionsFound = 0;
 	int rows = matrix.size();
@@ -163,11 +163,11 @@ bool DL::search(int k, int max)
 		for(int i=0;i<resultStack.size();i++) cout << resultStack[i] << " "; 
 		cout << endl;*/
 	
-		resultSet[resultPos[1]+1] = resultStack.size();
-		for(int i=0;i<resultStack.size();i++){
+		//resultSet[resultPos[1]+1] = resultStack.size();
+		/*for(int i=0;i<resultStack.size();i++){
 			resultSet[resultPos[1]+2+i] =resultStack[i];
 		}	
-		resultPos[1] += 1+resultStack.size();
+		resultPos[1] += 1+resultStack.size();*/
 
 		totalSolutionsFound++;
 		totalSolutions++;

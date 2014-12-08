@@ -21,8 +21,8 @@ int dataset[10000000];
 int metadata[MAX_PROC_NUMBER * 2];
 int totalsubset = 0;
 int totalSolutions = 0;
-int resultPos[2];
-int resultSet[10000000];
+//int resultPos[2];
+//int resultSet[10000000];
 
 DL *dl = NULL;
 TileToSC *sc = NULL;
@@ -112,7 +112,7 @@ scatterMetaData(int *data,
 	return metadatasize;
 }
 
-void
+/*void
 scatterResult(int *pos, int *data, int p, int NP)
 {
 	int idx = 0,
@@ -145,7 +145,7 @@ scatterResult(int *pos, int *data, int p, int NP)
 			}
 		}	
 	}
-}
+}*/
 
 int main(int argc, char* argv[])
 {
@@ -297,9 +297,9 @@ int main(int argc, char* argv[])
 	}
 
 	
-	scatterResult(resultPos,resultSet,id,size);
+	//scatterResult(resultPos,resultSet,id,size);
 
-	if(MASTER)
+	/*if(MASTER)
 	{
 		for(int i=0;i<resultPos[1]-resultPos[0]+1;i++)
 		{
@@ -309,7 +309,7 @@ int main(int argc, char* argv[])
 
 		cout << "There are " << sc->getDiffResult(resultSet,resultPos[1]-resultPos[0]+1,matrix) << " different result." << endl;
 		cout << resultPos[1]-resultPos[0]+1 << endl;
-	}
+	}*/
 
 	int grandTotalSolutions = 0;
 	MPI_Reduce(&totalSolutions, &grandTotalSolutions, 1, MPI_INTEGER,
