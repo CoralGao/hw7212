@@ -308,6 +308,7 @@ int main(int argc, char* argv[])
 		cout << endl;
 
 		cout << "There are " << sc->getDiffResult(resultSet,resultPos[1]-resultPos[0]+1,matrix) << " different result." << endl;
+		cout << resultPos[1]-resultPos[0]+1 << endl;
 	}
 
 	int grandTotalSolutions = 0;
