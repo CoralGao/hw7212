@@ -37,7 +37,6 @@ scatterMetaData(int *data,
 				int P,
 				int p)
 {
-	cout <<  p << " comes to scatterMetaData" << endl;	
 	int	pN = P,
 		idx = 0,
 		tag = 101,
@@ -52,29 +51,21 @@ scatterMetaData(int *data,
     	if(isMaster){
                 newN = (int) ceil(metadatasize*1.0/pN);
                 for(int i=0;i<pN;i++){
-		cout << "start sending scatterMetaData to " << idx+i << endl;
                         if((i*newN)>=metadatasize){
-				cout << "comes here!" << endl;
                                 MPI_Send(metadata+metadatasize*2,2,MPI_INTEGER,idx+i,tag,MPI_COMM_WORLD);
-                        	cout << "ends here!" << endl;
 			}else{
 				if(newN*(i+1) <= metadatasize)
                                 	metadata[newN*2*i+1] = metadata[newN*2*(i+1)-1];
 				else
 					metadata[newN*2*i+1] = metadata[metadatasize*2-1];
 				if(i!=0){
-				cout << "comes there." << endl;
                                 datasize = metadata[newN*2*i+1]-metadata[newN*2*i]+1;
-				cout << "the data size is: " << datasize << endl;
 				MPI_Send(metadata+newN*2*i,2,MPI_INTEGER,idx+i,tag,MPI_COMM_WORLD);
 				MPI_Send(data+metadata[newN*2*i],datasize,MPI_INTEGER, idx+i, tag, MPI_COMM_WORLD);
                         	}
-				cout << "ends there!" << endl;
 			}
-	       cout << "end in sending scatterMetaData to " << idx +i << endl;
                 }
         }else{
-	cout << "start to recieve data: " << p << endl;
 	rcvMetadatasize = 2;
 
 	MPI_Recv(metadata, rcvMetadatasize, MPI_INTEGER, idx, tag, MPI_COMM_WORLD, &status);
@@ -161,35 +152,30 @@ int main(int argc, char* argv[])
 		sc = new TileToSC(pieces,board);
 		sc->startConvert();
 		matrix = sc->getSet();
-
-		/*for(int i=0;i<matrix.size();i++){
+		
+		for(int i=0;i<matrix.size();i++)
+		{
 			for(int j=0;j<matrix[i].size();j++)
-				cout << matrix[i][j] << " " ;
+				cout << matrix[i][j] << " ";
 			cout << endl;
-		}*/
+		}
 
 		cout << "Finish Convert.." << endl;
 		cout << "Start Master Process to search the result.."<< endl;
 		dl = new DL(matrix);		
 		dl->search(0,0);
-
-		cout << "the total solution is: " << totalSolutions << endl;
 		cout << "Ending the Master process search.." << endl;
 	}
 
 	seqetime = MPI_Wtime();
-	//MPI_Bcast(&totalsubset, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
-	cout << "comes to broad cast the sub problem" << endl;
+	
 	scatterMetaData(dataset, metadata, totalsubset, size, id);
-	cout << "finish broad cast the sub problem" << endl;
 
 	if(MASTER)
 		delete dl;
 
-	cout << id << " start to run the subproblem." << endl;	
 	for(int i = 0; i < metadata[1]-metadata[0]+1; i++)
 	{
-		cout << "i is: " << i << endl;
 		vector <vector<int> > subMatrix;
 
 		int totalPartialResult = dataset[i];
@@ -244,26 +230,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	for(int a=0;a<resultPos[1]-resultPos[0]+1;a++)
-        {
-                cout << resultSet[a] << " ";
-        }
-        cout << endl;
-	
 	scatterResult(resultPos,resultSet,id,size);
-
-	cout << "the results are: " << resultPos[0] << " " << resultPos[1] << endl;
-
-	if(MASTER)
-	{
-		for(int i=0;i<resultPos[1]-resultPos[0]+1;i++)
-		{
-			cout << resultSet[i] << " ";
-		}
-		cout << endl;
-
-		cout << "There are " << sc->getDiffResult(resultSet,resultPos[1]-resultPos[0]+1,matrix) << " different result." << endl;
-	}
 
 	int grandTotalSolutions = 0;
 	MPI_Reduce(&totalSolutions, &grandTotalSolutions, 1, MPI_INTEGER,
@@ -273,37 +240,21 @@ int main(int argc, char* argv[])
 	mytime = etime - stime;
 
 	MPI_Reduce(&mytime, &maxtime, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+
+        if(MASTER)
+        {
+        	cout << "There are " << min(grandTotalSolutions, sc->getDiffResult(resultSet,resultPos[1]-resultPos[0]+1,matrix)) << " different result." << endl;
+        }
 	
+	if(MASTER)
+		cout << "total grand is: " << grandTotalSolutions << endl;
 
         if (MASTER)
         {
                 cout << "Max processing at any node is " << maxtime << " second(s)\n";
                 cout << "Sequenctial processing time is " << seqetime - stime << " second(s)\n";
         }
-
-    	if(MASTER)
-        {
-                /*for(int i=0;i<resultPos[1]-resultPos[0]+1;i++)
-                {
-                        cout << resultSet[i] << " ";
-                }
-                cout << endl;*/
-
-                cout << "There are " << sc->getDiffResult(resultSet,resultPos[1]-resultPos[0]+1,matrix) << " different result." << endl;
-                //cout << resultPos[1]-resultPos[0]+1 << endl;
-                        }
                 
-               
-               
-	/*if (MASTER)
-	{
-		cout << "Max processing at any node is " << maxtime << " second(s)\n";
-		cout << "Sequenctial processing time is " << seqetime - stime << " second(s)\n";
-	}*/
-
-	if(MASTER)
-		cout << "Total " << grandTotalSolutions << " solution(s) found\n";
-	
 	MPI_Finalize();
    	 return 0;
 }

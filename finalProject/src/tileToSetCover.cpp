@@ -80,26 +80,33 @@ TileToSC::getDiffResult(int *data, int size, vector<vector<int> >m)
 	{
 		string t="";
 		for(int j=0;j<m_board[i].size();j++)
-			t += 'd'; 	
+		{
+			if(m_board[i][j]!=' ')
+				t+= 'a'-1;
+			else
+				t+= ' ';
+		}
 		tempBoard.push_back(t);
 	}	
 
-	//cout << "the tempBoard  is: " << endl;	
+	cout << "the tempBoard  is: " << endl;	
 	//cout the tempBoard
-	//for(int i=0;i<m_board.size();i++)
-	//{
-	//	for(int j=0;j<m_board[i].size();j++)
-	//		cout << tempBoard[i][j] << " " ;
-	//	cout << endl;
-	//}
+	for(int i=0;i<m_board.size();i++)
+	{
+		for(int j=0;j<m_board[i].size();j++)
+			cout << tempBoard[i][j] << " " ;
+		cout << endl;
+	}
 
 	for(int i=0;i<tempBoard.size();i++)
 	{
 		for(int j=0;j<tempBoard[i].size();j++)
 		{
-	//		cout << c << " " << i << " " << j  << endl;
-			boardMatrx[c] = make_pair(i,j);
-			c++;	
+			if(tempBoard[i][j]!=' ')
+			{
+				boardMatrx[c] = make_pair(i,j);
+				c++;
+			}	
 		}
 	}
 	
@@ -462,12 +469,8 @@ TileToSC::generateResultSet(int n, vector<vector <string> > r)
 		{
 			for(int k=0;k<temp[j].size();k++)
 				if(temp[j][k]!=m_board[j][k]) t.push_back(1);
-				else t.push_back(0);
+				else if(m_board[j][k]!= ' ') t.push_back(0);
 		}
-
-		//for(int ii=0;ii<t.size();ii++)
-		//	cout << t[ii] << " ";
-		//cout << endl;
 
 		m_set.push_back(t);
 	}

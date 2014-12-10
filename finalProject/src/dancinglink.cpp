@@ -157,10 +157,8 @@ bool DL::search(int k, int max)
 
 	if(root->right == root)
 	{
-		//if(resultPos[0]==resultPos[1] && resultPos[1] == 0) {cout <<"comes here to set"<<endl ;resultPos[1] == -1;}
 		resultSet[resultPos[1]+1] = resultStack.size();
 	
-		//cout << "The resultPos is: " << resultPos[1]+1 << " " <<resultSet[0] << endl;
 		for(int i=0;i<resultStack.size();i++)
 		{
 			resultSet[resultPos[1]+2+i] = resultStack[i];
@@ -191,7 +189,6 @@ bool DL::search(int k, int max)
 	{
 		Node* nodeR = tempC;
 		resultStack.push_back(nodeR->row);		
-		//cout << "cover the row: " << nodeR->row << endl;
 
 		Node* tempR = tempC->right;
 
@@ -209,7 +206,6 @@ bool DL::search(int k, int max)
 			uncover(tempR->col);
 			tempR = tempR->left;
 		}
-		//cout << "pop the row: " << resultStack[resultStack.size()-1] << endl;
 		resultStack.pop_back();
 		tempC = tempC->down;
 	}
@@ -290,8 +286,6 @@ DL::checkRows(vector<int> rows)
 	if(rows.size()==0)
 		return;
 
-	/*for(int i=0;i<rows.size();i++)
-		cout << rows[i] << " ";*/
 
         sort(rows.begin(),rows.end());
 
