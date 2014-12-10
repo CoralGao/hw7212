@@ -80,15 +80,26 @@ TileToSC::getDiffResult(int *data, int size, vector<vector<int> >m)
 	{
 		string t="";
 		for(int j=0;j<m_board[i].size();j++)
-			t += ' '; 	
+			t += 'd'; 	
 		tempBoard.push_back(t);
 	}	
+
+	//cout << "the tempBoard  is: " << endl;	
+	//cout the tempBoard
+	//for(int i=0;i<m_board.size();i++)
+	//{
+	//	for(int j=0;j<m_board[i].size();j++)
+	//		cout << tempBoard[i][j] << " " ;
+	//	cout << endl;
+	//}
 
 	for(int i=0;i<tempBoard.size();i++)
 	{
 		for(int j=0;j<tempBoard[i].size();j++)
 		{
-			boardMatrx[c] = make_pair(i,j);	
+	//		cout << c << " " << i << " " << j  << endl;
+			boardMatrx[c] = make_pair(i,j);
+			c++;	
 		}
 	}
 	
@@ -101,45 +112,40 @@ TileToSC::getDiffResult(int *data, int size, vector<vector<int> >m)
 		isIn = -1;
 		for(map <vector<vector<string> >, char>::iterator it = colorBoard.begin();it!=colorBoard.end();it++)
 		{
-			//if(isInSet(tempPiece,it->first)){
-			//	colorPiece[i] = it->second;
-			//	isIn = 0;
-			//	break;
-			//}
+			if(isInSet(tempPiece,it->first)){
+				colorPiece[i] = it->second;
+				isIn = 0;
+				break;
+			}
 		}
 		if(isIn == -1){
-			colorBoard[allDifferent] = sColor;
 			sColor++;
+			colorBoard[allDifferent] = sColor;
 			colorPiece[i] = sColor;
 		}
 	}
+	//cout << "sColor is: " << sColor << endl;
 
 	//check all the results;
 	for(int i=0;i<size;i++)
 	{
-		//cout << "comes to compare the reuslts" << endl;
                 vector <string> tempResult= tempBoard;
-		/*for(int j=0;j<tempResult.size();j++){
-                        cout << tempResult[j] << tempResult[j].size() << endl;
-                }*/
-
-                //cout << endl;
 		int n = data[i];
 		for(int j=0;j<n;j++){
 			//cout << "comes to get the piece" << endl;
 			int np, nl = data[i+1], posI, posJ;
 			i++;
 			char tc;
-			//for(int ii=0;ii<m[nl].size();ii++)
-			//{
-			//	cout << m[nl][ii] << " ";
-			//}				
-			//cout << endl;
+			/*for(int ii=0;ii<m[nl].size();ii++)
+			{
+				cout << m[nl][ii] << " ";
+			}				
+			cout << endl;*/
 
-			//for(int k=0;k<m_pieces.size();k++){
-			//	cout << k << endl;
-			//	if(m[nl][k]==1) {np = k; break;}
-			//}
+			for(int k=0;k<m_pieces.size();k++){
+				//cout << k << endl;
+				if(m[nl][k]==1) {np = k; break;}
+			}
 
 			//cout << "board number is: " << np << endl;
 			
@@ -157,23 +163,23 @@ TileToSC::getDiffResult(int *data, int size, vector<vector<int> >m)
 			}	
 		}
 	
-		/*cout << "comes to compare the reuslts" << endl;	
-		for(int j=0;j<tempResult.size();j++){
-			cout << tempResult[i] << endl;
-		}
-		cout << endl;*/
+		//cout << "comes to compare the reuslts" << endl;	
+		//for(int j=0;j<tempResult.size();j++){
+		//	cout << tempResult[j] << endl;
+		//}
+		//cout << endl;
 
 		vector <vector<string> > tempDiffResult = getAllDiff(tempResult);
 		isIn = -1;
 
-		cout << "goes to compare the result" << endl;
-		cout << "different result size is: " << diffResult.size() << endl;
+		//cout << "goes to compare the result" << endl;
+		//cout << "different result size is: " << diffResult.size() << endl;
 		for(int j=0;j<tempDiffResult.size();j++){
-			/*if(isInSet(tempDiffResult[j],diffResult)){
+			if(isInSet(tempDiffResult[j],diffResult)){
 				isIn = 0;
-				cout << "leaves it." << endl;
+				//cout << "leaves it." << endl;
 				break;
-			}*/
+			}
 		}
 		
 		if(isIn == -1){

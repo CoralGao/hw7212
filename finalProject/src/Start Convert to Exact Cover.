@@ -1,0 +1,120 @@
+Start Convert to Exact Cover..
+1 0 0 0 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 
+1 0 0 0 0 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 
+1 0 0 0 0 0 1 1 0 0 1 1 0 0 0 0 0 0 0 0 
+1 0 0 0 0 0 0 0 1 1 0 0 1 1 0 0 0 0 0 0 
+1 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 0 0 0 0 
+1 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 0 0 0 
+1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 0 
+1 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 
+0 1 0 0 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 
+0 1 0 0 0 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 
+0 1 0 0 0 0 1 1 0 0 1 1 0 0 0 0 0 0 0 0 
+0 1 0 0 0 0 0 0 1 1 0 0 1 1 0 0 0 0 0 0 
+0 1 0 0 0 0 0 0 0 1 1 0 0 1 1 0 0 0 0 0 
+0 1 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 0 0 0 
+0 1 0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 0 
+0 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 
+0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 
+0 0 1 0 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 
+0 0 1 0 0 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 
+0 0 1 0 0 0 1 1 0 0 1 1 0 0 0 0 0 0 0 0 
+0 0 1 0 0 0 0 0 1 1 0 0 1 1 0 0 0 0 0 0 
+0 0 1 0 0 0 0 0 0 1 1 0 0 1 1 0 0 0 0 0 
+0 0 1 0 0 0 0 0 0 0 1 1 0 0 1 1 0 0 0 0 
+0 0 1 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 0 
+0 0 1 0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 
+0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 
+0 0 0 1 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 
+0 0 0 1 0 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 
+0 0 0 1 0 0 1 1 0 0 1 1 0 0 0 0 0 0 0 0 
+0 0 0 1 0 0 0 0 1 1 0 0 1 1 0 0 0 0 0 0 
+0 0 0 1 0 0 0 0 0 1 1 0 0 1 1 0 0 0 0 0 
+0 0 0 1 0 0 0 0 0 0 1 1 0 0 1 1 0 0 0 0 
+0 0 0 1 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 0 
+0 0 0 1 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 
+0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 
+Finish Convert..
+Start Master Process to search the result..
+the row size by main is:: 15
+The size of the data is: 244
+the row size by main is:: 15
+The size of the data is: 489
+the row size by main is:: 15
+The size of the data is: 734
+the row size by main is:: 15
+The size of the data is: 979
+Ending the Master process search..
+the recieved data size is: 1
+the recieved data size is: 1
+the recieved data size is: 1
+the recieved data size is: 1
+the recieved data size is: 980
+the recieved data size is: 245
+the size of the partial is: 1 0 
+the recieved data size is: 245
+the size of the partial is: 1 9 
+the recieved data size is: 490
+the size of the partial is: 1 18 
+the recieved data size is: 245
+the size of the partial is: 1 27 
+row size is: 1
+the data is: 11
+row size is: 1
+the data is: 2
+row size is: 1
+the data is: 2
+row size is: 1
+the data is: 2
+Find a solution:
+0 11 0 33 
+Find a solution:
+0 11 32 0 
+Find a solution:
+0 0 1 33 
+Find a solution:
+0 0 32 65857300 
+Find a solution:
+0 1 1 0 
+Find a solution:
+9 2 0 33 
+Find a solution:
+9 2 32 0 
+Find a solution:
+9 0 1 33 
+Find a solution:
+9 0 32 69519124 
+Find a solution:
+9 1 1 0 
+Find a solution:
+9 1 0 69519124 
+Find a solution:
+18 2 0 33 
+Find a solution:
+18 2 32 0 
+Find a solution:
+18 0 1 33 
+Find a solution:
+18 0 32 69216020 
+Find a solution:
+18 1 1 0 
+Find a solution:
+18 1 0 69216020 
+Find a solution:
+27 2 0 33 
+Find a solution:
+27 2 32 0 
+Find a solution:
+27 0 1 33 
+Find a solution:
+27 0 32 51398420 
+Find a solution:
+27 1 1 0 
+Find a solution:
+27 1 0 51398420 
+Find a solution:
+0 1 0 65857300 
+Max processing at any node is 0.030566 second(s)
+Sequenctial processing time is 0.0112422 second(s)
+Total 24 solution(s) found

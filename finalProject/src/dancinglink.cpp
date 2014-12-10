@@ -9,13 +9,11 @@ extern int dataset[10000000];
 extern int metadata[MAX_PROC_NUMBER * 2];
 extern int totalsubset;
 extern int totalSolutions;
-//extern int resultPos[2];
-//extern int resultSet[10000000];
+extern int resultPos[2];
+extern int resultSet[10000000];
 
 DL::DL(vector<vector<int> > matrix)
 {
-	//resultPos[0] = 0, resultPos[1] = -1;
-
 	int totalSolutionsFound = 0;
 	int rows = matrix.size();
 	int cols = matrix[0].size();
@@ -159,15 +157,16 @@ bool DL::search(int k, int max)
 
 	if(root->right == root)
 	{
-		/*cout << "Find a solution:" << endl;
-		for(int i=0;i<resultStack.size();i++) cout << resultStack[i] << " "; 
-		cout << endl;*/
+		//if(resultPos[0]==resultPos[1] && resultPos[1] == 0) {cout <<"comes here to set"<<endl ;resultPos[1] == -1;}
+		resultSet[resultPos[1]+1] = resultStack.size();
 	
-		//resultSet[resultPos[1]+1] = resultStack.size();
-		/*for(int i=0;i<resultStack.size();i++){
-			resultSet[resultPos[1]+2+i] =resultStack[i];
-		}	
-		resultPos[1] += 1+resultStack.size();*/
+		//cout << "The resultPos is: " << resultPos[1]+1 << " " <<resultSet[0] << endl;
+		for(int i=0;i<resultStack.size();i++)
+		{
+			resultSet[resultPos[1]+2+i] = resultStack[i];
+		}
+		
+		resultPos[1] += 1+resultStack.size();
 
 		totalSolutionsFound++;
 		totalSolutions++;
@@ -192,6 +191,7 @@ bool DL::search(int k, int max)
 	{
 		Node* nodeR = tempC;
 		resultStack.push_back(nodeR->row);		
+		//cout << "cover the row: " << nodeR->row << endl;
 
 		Node* tempR = tempC->right;
 
@@ -209,6 +209,7 @@ bool DL::search(int k, int max)
 			uncover(tempR->col);
 			tempR = tempR->left;
 		}
+		//cout << "pop the row: " << resultStack[resultStack.size()-1] << endl;
 		resultStack.pop_back();
 		tempC = tempC->down;
 	}
@@ -276,11 +277,9 @@ DL::getData(int a[], int k)
 
 	sort(rows.begin(),rows.end());
 	rows.erase(unique(rows.begin(),rows.end()),rows.end());
-	//cout << "the size of the rows is: " << rows.size() << " " << rows[0] << endl;
-	
 	a[k+2+lines.size()*col] = rows.size();
 	for(int i=0;i<rows.size();i++)
-		a[k+2+lines.size()*col+i] = rows[i];
+		a[k+3+lines.size()*col+i] = rows[i];
 
 	return rows.size()+1+resultStack.size()+1+lines.size()*col+2;	
 }
